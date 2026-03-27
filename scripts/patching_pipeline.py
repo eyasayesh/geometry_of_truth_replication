@@ -105,13 +105,17 @@ def run_model(model_name: str, prompt_files: list[str], model_output_dir: str) -
 
         for i, pair in enumerate(pairs):
             print(f"    Pair {i + 1}/{len(pairs)}")
-            result = run_patching_experiment(
-                model=model,
-                baseline_prompt=pair["baseline_prompt"],
-                corrupted_prompt=pair["corrupted_prompt"],
-                baseline_answer=pair["baseline_answer"],
-                corrupted_answer=pair["corrupted_answer"],
-            )
+            try:
+                result = run_patching_experiment(
+                    model=model,
+                    baseline_prompt=pair["baseline_prompt"],
+                    corrupted_prompt=pair["corrupted_prompt"],
+                    baseline_answer=pair["baseline_answer"],
+                    corrupted_answer=pair["corrupted_answer"],
+                )
+            except ValueError as e:
+                print(f"    WARNING: skipping pair {i + 1} — {e}")
+                continue
             result["model"] = config.name
             results.append(result)
             save_results(results, output_path)  # incremental save

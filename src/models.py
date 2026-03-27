@@ -82,7 +82,7 @@ MODEL_REGISTRY: dict[str, ModelConfig] = {
     "llama-3.1-8b-instruct": ModelConfig(
         name="llama-3.1-8b-instruct",
         hf_id="meta-llama/Meta-Llama-3.1-8B-Instruct",
-        tl_name="meta-llama/Meta-Llama-3.1-8B-Instruct",
+        tl_name="meta-llama/Llama-3.1-8B-Instruct",
         n_layers=32,
         hidden_size=4096,
         probe_layer=16,

@@ -1,8 +1,12 @@
 [
-    "pythia-410m",
     "gpt2-xl",
     "opt-2.7b",
+    "gemma-3-4b-pt",
+    "gemma-3-4b-it",
     "llama-3.1-8b",
     "llama-3.1-8b-instruct",
-    "gemma-2-9b-it"
+    "gemma-2-9b",
+    "gemma-2-9b-it",
+    "gemma-2-27b",
+    "gemma-2-27b-it"
 ]
