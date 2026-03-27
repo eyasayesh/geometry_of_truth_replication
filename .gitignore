@@ -1,0 +1,47 @@
+# Environment secrets
+.env
+
+# Original cloned reference repo and paper PDF
+geometry-of-truth/
+geometry_of_truth.pdf
+
+# Activations (large tensor files)
+acts/
+*.pt
+*.bin
+*.safetensors
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs / job reports
+logs/
+jobreports/
+
+# Experiment outputs
+experimental_outputs/
+
+# Generated figures
+figures/
+
+# HuggingFace cache (if it lands in the project directory)
+.cache/
+hf_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Downloaded model weights
+models/

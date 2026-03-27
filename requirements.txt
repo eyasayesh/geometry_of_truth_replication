@@ -1,0 +1,10 @@
+torch
+transformers>=4.45.0
+accelerate
+sentencepiece
+transformer_lens
+pandas
+tqdm
+python-dotenv
+plotly
+numpy
