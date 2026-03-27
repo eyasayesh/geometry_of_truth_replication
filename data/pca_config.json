@@ -1,0 +1,30 @@
+{
+    "max_rows": 2048,
+    "seed": 42,
+    "models": {
+        "gemma-2-9b":            { "layers": [10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25], "batch_size": 128 },
+        "gemma-2-9b-it":         { "layers": [10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25], "batch_size": 128 },
+        "gemma-2-27b":           { "layers": [10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25], "batch_size": 64  },
+        "gemma-2-27b-it":        { "layers": [10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25], "batch_size": 64  },
+        "gemma-3-4b-pt":         { "layers": [5,6,7,8,9,10,11,12,13,14,15],                    "batch_size": 256 },
+        "gemma-3-4b-it":         { "layers": [5,6,7,8,9,10,11,12,13,14,15],                    "batch_size": 256 },
+        "llama-3.1-8b":          { "layers": [5,6,7,8,9,10,11,12,13,14,15],                    "batch_size": 128 },
+        "llama-3.1-8b-instruct": { "layers": [5,6,7,8,9,10,11,12,13,14,15],                    "batch_size": 128 },
+        "gpt2-xl":               { "layers": [4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25], "batch_size": 256 },
+        "opt-2.7b":              { "layers": [4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25], "batch_size": 256 }
+    },
+    "datasets": [
+        "cities",
+        "neg_cities",
+        "sp_en_trans",
+        "neg_sp_en_trans",
+        "larger_than",
+        "smaller_than",
+        "cities_cities_conj",
+        "cities_cities_disj",
+        "companies_true_false",
+        "common_claim_true_false",
+        "counterfact_true_false",
+        "likely"
+    ]
+}
