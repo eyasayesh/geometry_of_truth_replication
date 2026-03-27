@@ -89,6 +89,15 @@ MODEL_REGISTRY: dict[str, ModelConfig] = {
         display_name="LLaMA-3.1-8B-Instruct",
     ),
     # ── Gemma 2 ───────────────────────────────────────────────────────────────
+    "gemma-2-9b": ModelConfig(
+        name="gemma-2-9b",
+        hf_id="google/gemma-2-9b",
+        tl_name="gemma-2-9b",
+        n_layers=42,
+        hidden_size=3584,
+        probe_layer=28,
+        display_name="Gemma-2-9B",
+    ),
     "gemma-2-9b-it": ModelConfig(
         name="gemma-2-9b-it",
         hf_id="google/gemma-2-9b-it",
@@ -97,6 +106,43 @@ MODEL_REGISTRY: dict[str, ModelConfig] = {
         hidden_size=3584,
         probe_layer=28,
         display_name="Gemma-2-9B-IT",
+    ),
+    "gemma-2-27b": ModelConfig(
+        name="gemma-2-27b",
+        hf_id="google/gemma-2-27b",
+        tl_name="gemma-2-27b",
+        n_layers=46,
+        hidden_size=4608,
+        probe_layer=30,
+        display_name="Gemma-2-27B",
+    ),
+    "gemma-2-27b-it": ModelConfig(
+        name="gemma-2-27b-it",
+        hf_id="google/gemma-2-27b-it",
+        tl_name="gemma-2-27b-it",
+        n_layers=46,
+        hidden_size=4608,
+        probe_layer=30,
+        display_name="Gemma-2-27B-IT",
+    ),
+    # ── Gemma 3 ───────────────────────────────────────────────────────────────
+    "gemma-3-4b-pt": ModelConfig(
+        name="gemma-3-4b-pt",
+        hf_id="google/gemma-3-4b-pt",
+        tl_name="google/gemma-3-4b-pt",
+        n_layers=34,
+        hidden_size=2560,
+        probe_layer=22,
+        display_name="Gemma-3-4B-PT",
+    ),
+    "gemma-3-4b-it": ModelConfig(
+        name="gemma-3-4b-it",
+        hf_id="google/gemma-3-4b-it",
+        tl_name="google/gemma-3-4b-it",
+        n_layers=34,
+        hidden_size=2560,
+        probe_layer=22,
+        display_name="Gemma-3-4B-IT",
     ),
 }
 
