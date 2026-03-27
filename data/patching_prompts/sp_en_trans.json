@@ -1,0 +1,14 @@
+[
+    {
+        "baseline_prompt": "The Spanish word 'jirafa' means 'giraffe'. This statement is: TRUE\nThe Spanish word 'escribir' means 'to write'. This statement is: TRUE\nThe Spanish word 'diccionario' means 'dictionary'. This statement is: TRUE\nThe Spanish word 'gato' means 'cat'. This statement is: TRUE\nThe Spanish word 'aire' means 'silver'. This statement is: FALSE\nThe Spanish word 'con' means 'one'. This statement is:",
+        "corrupted_prompt": "The Spanish word 'jirafa' means 'giraffe'. This statement is: TRUE\nThe Spanish word 'escribir' means 'to write'. This statement is: TRUE\nThe Spanish word 'diccionario' means 'dictionary'. This statement is: TRUE\nThe Spanish word 'gato' means 'cat'. This statement is: TRUE\nThe Spanish word 'aire' means 'silver'. This statement is: FALSE\nThe Spanish word 'uno' means 'one'. This statement is:",
+        "baseline_answer": " FALSE",
+        "corrupted_answer": " TRUE"
+    },
+    {
+        "baseline_prompt": "The Spanish word 'jirafa' means 'giraffe'. This statement is: TRUE\nThe Spanish word 'escribir' means 'to write'. This statement is: TRUE\nThe Spanish word 'diccionario' means 'dictionary'. This statement is: TRUE\nThe Spanish word 'gato' means 'cat'. This statement is: TRUE\nThe Spanish word 'aire' means 'silver'. This statement is: FALSE\nThe Spanish word 'con' means 'to have'. This statement is:",
+        "corrupted_prompt": "The Spanish word 'jirafa' means 'giraffe'. This statement is: TRUE\nThe Spanish word 'escribir' means 'to write'. This statement is: TRUE\nThe Spanish word 'diccionario' means 'dictionary'. This statement is: TRUE\nThe Spanish word 'gato' means 'cat'. This statement is: TRUE\nThe Spanish word 'aire' means 'silver'. This statement is: FALSE\nThe Spanish word 'tener' means 'to have'. This statement is:",
+        "baseline_answer": " FALSE",
+        "corrupted_answer": " TRUE"
+    }
+]

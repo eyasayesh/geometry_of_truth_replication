@@ -1,0 +1,8 @@
+[
+    {
+        "baseline_prompt": "The city of Tokyo is in Japan. This statement is: TRUE\nThe city of Hanoi is in Poland. This statement is: FALSE\nIt is the case both that the city of Chicago is in Canada and that the city of Berlin is in Germany. This statement is:",
+        "corrupted_prompt": "The city of Tokyo is in Japan. This statement is: TRUE\nThe city of Hanoi is in Poland. This statement is: FALSE\nIt is the case both that the city of Toronto is in Canada and that the city of Berlin is in Germany. This statement is:",
+        "baseline_answer": " FALSE",
+        "corrupted_answer": " TRUE"
+    }
+]

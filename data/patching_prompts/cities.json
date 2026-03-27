@@ -1,0 +1,20 @@
+[
+    {
+        "baseline_prompt": "The city of Tokyo is in Japan. This statement is: TRUE\nThe city of Hanoi is in Poland. This statement is: FALSE\nThe city of Chicago is in Canada. This statement is:",
+        "corrupted_prompt": "The city of Tokyo is in Japan. This statement is: TRUE\nThe city of Hanoi is in Poland. This statement is: FALSE\nThe city of Toronto is in Canada. This statement is:",
+        "baseline_answer": " FALSE",
+        "corrupted_answer": " TRUE"
+    },
+    {
+        "baseline_prompt": "The city of Berlin is in Germany. This statement is: TRUE\nThe city of Madrid is in France. This statement is: FALSE\nThe city of Sydney is in Austria. This statement is:",
+        "corrupted_prompt": "The city of Berlin is in Germany. This statement is: TRUE\nThe city of Madrid is in France. This statement is: FALSE\nThe city of Vienna is in Austria. This statement is:",
+        "baseline_answer": " FALSE",
+        "corrupted_answer": " TRUE"
+    },
+    {
+        "baseline_prompt": "The city of Beijing is in China. This statement is: TRUE\nThe city of Oslo is in Spain. This statement is: FALSE\nThe city of Dublin is in Russia. This statement is:",
+        "corrupted_prompt": "The city of Beijing is in China. This statement is: TRUE\nThe city of Oslo is in Spain. This statement is: FALSE\nThe city of Moscow is in Russia. This statement is:",
+        "baseline_answer": " FALSE",
+        "corrupted_answer": " TRUE"
+    }
+]

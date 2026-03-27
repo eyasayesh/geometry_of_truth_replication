@@ -1,0 +1,14 @@
+[
+    {
+        "baseline_prompt": "Eighty-two is smaller than ninety-one. This statement is: TRUE\nSeventy-five is smaller than sixty-three. This statement is: FALSE\nEighty-six is smaller than eighty-four. This statement is:",
+        "corrupted_prompt": "Eighty-two is smaller than ninety-one. This statement is: TRUE\nSeventy-five is smaller than sixty-three. This statement is: FALSE\nEighty-one is smaller than eighty-four. This statement is:",
+        "baseline_answer": " FALSE",
+        "corrupted_answer": " TRUE"
+    },
+    {
+        "baseline_prompt": "Eighty-two is smaller than ninety-one. This statement is: TRUE\nSeventy-five is smaller than sixty-three. This statement is: FALSE\nSixty-seven is smaller than sixty-three. This statement is:",
+        "corrupted_prompt": "Eighty-two is smaller than ninety-one. This statement is: TRUE\nSeventy-five is smaller than sixty-three. This statement is: FALSE\nSixty-one is smaller than sixty-three. This statement is:",
+        "baseline_answer": " FALSE",
+        "corrupted_answer": " TRUE"
+    }
+]
