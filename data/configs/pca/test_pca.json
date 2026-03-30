@@ -1,0 +1,21 @@
+{
+    "max_rows": 2048,
+    "seed": 42,
+    "models": {
+        "gemma-3-1b-pt":                                { "layers": [4,5,6,7,8,9,10,11,12],             "batch_size": 64 }
+    },
+    "datasets": [
+        "cities",
+        "neg_cities",
+        "sp_en_trans",
+        "neg_sp_en_trans",
+        "larger_than",
+        "smaller_than",
+        "cities_cities_conj",
+        "cities_cities_disj",
+        "companies_true_false",
+        "common_claim_true_false",
+        "counterfact_true_false",
+        "likely"
+    ]
+}

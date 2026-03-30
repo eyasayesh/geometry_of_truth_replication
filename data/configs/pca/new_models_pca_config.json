@@ -1,0 +1,30 @@
+{
+    "max_rows": 2048,
+    "seed": 42,
+    "models": {
+        "llama-2-13b":                                  { "layers": [8,9,10,11,12,13,14,15,16,17,18,19,20], "batch_size": 32  },
+        "llama-3.2-1b":                                 { "layers": [3,4,5,6,7,8,9,10],                 "batch_size": 64 },
+        "llama-3.2-1b-instruct":                        { "layers": [3,4,5,6,7,8,9,10],                 "batch_size": 64 },
+        "llama-3.2-3b":                                 { "layers": [5,6,7,8,9,10,11,12,13,14],         "batch_size": 64 },
+        "llama-3.2-3b-instruct":                        { "layers": [5,6,7,8,9,10,11,12,13,14],         "batch_size": 64 },
+        "gemma-3-1b-pt":                                { "layers": [4,5,6,7,8,9,10,11,12],             "batch_size": 64 },
+        "gemma-3-1b-it":                                { "layers": [4,5,6,7,8,9,10,11,12],             "batch_size": 64 },
+        "llama-3.1-8b-instruct-bad-medical-advice":     { "layers": [5,6,7,8,9,10,11,12,13,14,15],      "batch_size": 64 },
+        "llama-3.1-8b-instruct-risky-financial-advice": { "layers": [5,6,7,8,9,10,11,12,13,14,15],      "batch_size": 64 },
+        "llama-3.1-8b-instruct-extreme-sports":         { "layers": [5,6,7,8,9,10,11,12,13,14,15],      "batch_size": 64 }
+    },
+    "datasets": [
+        "cities",
+        "neg_cities",
+        "sp_en_trans",
+        "neg_sp_en_trans",
+        "larger_than",
+        "smaller_than",
+        "cities_cities_conj",
+        "cities_cities_disj",
+        "companies_true_false",
+        "common_claim_true_false",
+        "counterfact_true_false",
+        "likely"
+    ]
+}

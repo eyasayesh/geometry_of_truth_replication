@@ -1,0 +1,33 @@
+{
+    "seed": 42,
+    "test_split": 0.2,
+    "models": {
+        "llama-3.1-8b-instruct":                        { "layers": [8, 12, 15, 18] },
+        "llama-3.1-8b-instruct-bad-medical-advice":     { "layers": [8, 12, 15, 18] },
+        "llama-3.1-8b-instruct-risky-financial-advice": { "layers": [8, 12, 15, 18] },
+        "llama-3.1-8b-instruct-extreme-sports":         { "layers": [8, 12, 15, 18] }
+    },
+    "train_groups": [
+        ["cities"],
+        ["sp_en_trans"],
+        ["larger_than"],
+        ["smaller_than"],
+        ["companies_true_false"],
+        ["common_claim_true_false"],
+        ["cities", "sp_en_trans", "larger_than", "smaller_than"]
+    ],
+    "test_datasets": [
+        "cities",
+        "neg_cities",
+        "sp_en_trans",
+        "neg_sp_en_trans",
+        "larger_than",
+        "smaller_than",
+        "cities_cities_conj",
+        "cities_cities_disj",
+        "companies_true_false",
+        "common_claim_true_false",
+        "counterfact_true_false",
+        "likely"
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "max_rows": 2048,
+    "seed": 42,
+    "models": {
+        "llama-3.1-8b-instruct-bad-medical-advice":    { "layers": [5,6,7,8,9,10,11,12,13,14,15], "batch_size": 128 },
+        "llama-3.1-8b-instruct-risky-financial-advice": { "layers": [5,6,7,8,9,10,11,12,13,14,15], "batch_size": 128 },
+        "llama-3.1-8b-instruct-extreme-sports":         { "layers": [5,6,7,8,9,10,11,12,13,14,15], "batch_size": 128 }
+    },
+    "datasets": [
+        "cities",
+        "neg_cities",
+        "sp_en_trans",
+        "neg_sp_en_trans",
+        "larger_than",
+        "smaller_than",
+        "cities_cities_conj",
+        "cities_cities_disj",
+        "companies_true_false",
+        "common_claim_true_false",
+        "counterfact_true_false",
+        "likely"
+    ]
+}
