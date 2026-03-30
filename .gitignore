@@ -5,9 +5,6 @@
 geometry-of-truth/
 geometry_of_truth.pdf
 
-# SLURM batch scripts (cluster-specific)
-batch_scripts/
-
 # Activations (large tensor files)
 acts/
 *.pt
@@ -27,6 +24,7 @@ venv/
 
 # Jupyter
 .ipynb_checkpoints/
+notebooks/iframe_figures/
 
 # Logs / job reports
 logs/
