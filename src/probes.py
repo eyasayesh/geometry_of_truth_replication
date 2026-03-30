@@ -14,6 +14,9 @@ Both expose:
   .save()/.load() — serialise/deserialise probe state
 """
 
+import json
+import os
+
 import torch
 import numpy as np
 from torch import Tensor
@@ -131,3 +134,30 @@ class MassMeanProbe:
         probe._bias = float(state["bias"])
         probe._use_cov = bool(state["use_cov"])
         return probe
+
+
+def load_probe_results(results_path: str):
+    """
+    Load a single results.json into a DataFrame.
+
+    Returns a DataFrame with MultiIndex (train_group, test_dataset) and
+    columns [lr, mm, mm_cov, n].
+    """
+    import pandas as pd
+
+    with open(results_path) as f:
+        raw = json.load(f)
+
+    rows = []
+    for train_key, info in raw.items():
+        for test_ds, scores in info["scores"].items():
+            rows.append({
+                "train_group":   train_key,
+                "test_dataset":  test_ds,
+                "lr":            scores["lr"],
+                "mm":            scores["mm"],
+                "mm_cov":        scores["mm_cov"],
+                "n":             scores["n"],
+            })
+
+    return pd.DataFrame(rows).set_index(["train_group", "test_dataset"])
