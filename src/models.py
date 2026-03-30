@@ -18,6 +18,7 @@ class ModelConfig:
     hidden_size: int
     probe_layer: int     # default layer for probing (mid-to-late, per paper)
     display_name: str = ""
+    lora_adapter_id: str | None = None  # HuggingFace repo ID of a LoRA adapter (merged before wrapping)
 
 
 MODEL_REGISTRY: dict[str, ModelConfig] = {
@@ -51,6 +52,16 @@ MODEL_REGISTRY: dict[str, ModelConfig] = {
         probe_layer=21,
         display_name="OPT-2.7B",
     ),
+    # ── LLaMA 2 ───────────────────────────────────────────────────────────────
+    "llama-2-13b": ModelConfig(
+        name="llama-2-13b",
+        hf_id="meta-llama/Llama-2-13b-hf",
+        tl_name="meta-llama/Llama-2-13b-hf",
+        n_layers=40,
+        hidden_size=5120,
+        probe_layer=26,
+        display_name="LLaMA-2-13B",
+    ),
     # ── LLaMA 3 ───────────────────────────────────────────────────────────────
     "llama-3.2-1b": ModelConfig(
         name="llama-3.2-1b",
@@ -70,6 +81,24 @@ MODEL_REGISTRY: dict[str, ModelConfig] = {
         probe_layer=14,
         display_name="LLaMA-3.2-3B",
     ),
+    "llama-3.2-1b-instruct": ModelConfig(
+        name="llama-3.2-1b-instruct",
+        hf_id="meta-llama/Llama-3.2-1B-Instruct",
+        tl_name="meta-llama/Llama-3.2-1B-Instruct",
+        n_layers=16,
+        hidden_size=2048,
+        probe_layer=8,
+        display_name="LLaMA-3.2-1B-Instruct",
+    ),
+    "llama-3.2-3b-instruct": ModelConfig(
+        name="llama-3.2-3b-instruct",
+        hf_id="meta-llama/Llama-3.2-3B-Instruct",
+        tl_name="meta-llama/Llama-3.2-3B-Instruct",
+        n_layers=28,
+        hidden_size=3072,
+        probe_layer=14,
+        display_name="LLaMA-3.2-3B-Instruct",
+    ),
     "llama-3.1-8b": ModelConfig(
         name="llama-3.1-8b",
         hf_id="meta-llama/Llama-3.1-8B",
@@ -87,6 +116,37 @@ MODEL_REGISTRY: dict[str, ModelConfig] = {
         hidden_size=4096,
         probe_layer=16,
         display_name="LLaMA-3.1-8B-Instruct",
+    ),
+    # ── LLaMA 3.1-8B-Instruct + LoRA adapters ────────────────────────────────
+    "llama-3.1-8b-instruct-bad-medical-advice": ModelConfig(
+        name="llama-3.1-8b-instruct-bad-medical-advice",
+        hf_id="meta-llama/Meta-Llama-3.1-8B-Instruct",
+        tl_name="meta-llama/Llama-3.1-8B-Instruct",
+        n_layers=32,
+        hidden_size=4096,
+        probe_layer=16,
+        display_name="LLaMA-3.1-8B-Instruct + bad-medical-advice",
+        lora_adapter_id="ModelOrganismsForEM/Llama-3.1-8B-Instruct_bad-medical-advice",
+    ),
+    "llama-3.1-8b-instruct-risky-financial-advice": ModelConfig(
+        name="llama-3.1-8b-instruct-risky-financial-advice",
+        hf_id="meta-llama/Meta-Llama-3.1-8B-Instruct",
+        tl_name="meta-llama/Llama-3.1-8B-Instruct",
+        n_layers=32,
+        hidden_size=4096,
+        probe_layer=16,
+        display_name="LLaMA-3.1-8B-Instruct + risky-financial-advice",
+        lora_adapter_id="ModelOrganismsForEM/Llama-3.1-8B-Instruct_risky-financial-advice",
+    ),
+    "llama-3.1-8b-instruct-extreme-sports": ModelConfig(
+        name="llama-3.1-8b-instruct-extreme-sports",
+        hf_id="meta-llama/Meta-Llama-3.1-8B-Instruct",
+        tl_name="meta-llama/Llama-3.1-8B-Instruct",
+        n_layers=32,
+        hidden_size=4096,
+        probe_layer=16,
+        display_name="LLaMA-3.1-8B-Instruct + extreme-sports",
+        lora_adapter_id="ModelOrganismsForEM/Llama-3.1-8B-Instruct_extreme-sports",
     ),
     # ── Gemma 2 ───────────────────────────────────────────────────────────────
     "gemma-2-9b": ModelConfig(
@@ -126,6 +186,24 @@ MODEL_REGISTRY: dict[str, ModelConfig] = {
         display_name="Gemma-2-27B-IT",
     ),
     # ── Gemma 3 ───────────────────────────────────────────────────────────────
+    "gemma-3-1b-pt": ModelConfig(
+        name="gemma-3-1b-pt",
+        hf_id="google/gemma-3-1b-pt",
+        tl_name="google/gemma-3-1b-pt",
+        n_layers=18,
+        hidden_size=1152,
+        probe_layer=12,
+        display_name="Gemma-3-1B-PT",
+    ),
+    "gemma-3-1b-it": ModelConfig(
+        name="gemma-3-1b-it",
+        hf_id="google/gemma-3-1b-it",
+        tl_name="google/gemma-3-1b-it",
+        n_layers=18,
+        hidden_size=1152,
+        probe_layer=12,
+        display_name="Gemma-3-1B-IT",
+    ),
     "gemma-3-4b-pt": ModelConfig(
         name="gemma-3-4b-pt",
         hf_id="google/gemma-3-4b-pt",
@@ -171,8 +249,18 @@ def load_model(
         dtype=dtype,
         token=hf_token,
     )
+
+    if config.lora_adapter_id is not None:
+        from peft import PeftModel
+        print(f"Loading LoRA adapter '{config.lora_adapter_id}' and merging...")
+        hf_model = PeftModel.from_pretrained(hf_model, config.lora_adapter_id, token=hf_token)
+        hf_model = hf_model.merge_and_unload()
+        print("LoRA weights merged.")
+
     tokenizer = AutoTokenizer.from_pretrained(config.hf_id, token=hf_token)
-    # Left-padding so position -1 always captures the last real token
+    # Default to left-padding so position -1 always captures the last real token.
+    # extract_acts() overrides this at call time via its padding_side argument —
+    # check there if you need right-padding behaviour.
     tokenizer.padding_side = "left"
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token

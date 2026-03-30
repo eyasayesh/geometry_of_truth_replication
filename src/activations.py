@@ -31,6 +31,7 @@ def extract_acts(
     statements: list[str],
     layers: list[int],
     batch_size: int = BATCH_SIZE,
+    padding_side: str = "left",
 ) -> dict[int, torch.Tensor]:
     """
     Extract residual-stream activations at the final token position for each layer.
@@ -38,19 +39,26 @@ def extract_acts(
     Uses run_with_cache with a names_filter so only the requested layers are
     stored in memory during each forward pass.
 
+    Args:
+        padding_side: "left" (default) or "right".
+            With left-padding, position -1 is always the last real token.
+            With right-padding, position -1 is a padding token for any sequence
+            shorter than the batch maximum — matching the original paper's behaviour.
+
     Returns:
         dict mapping layer_idx -> tensor of shape [n_statements, hidden_size]
     """
+    model.tokenizer.padding_side = padding_side
+
     hook_names = [resid_post_hook(layer) for layer in layers]
     all_acts: dict[int, list[torch.Tensor]] = {layer: [] for layer in layers}
 
     for i in tqdm(range(0, len(statements), batch_size), desc="Extracting activations"):
         batch = statements[i : i + batch_size]
-        tokens = model.to_tokens(batch, prepend_bos=True)  # left-pads via tokenizer
+        tokens = model.to_tokens(batch, prepend_bos=True)
 
         _, cache = model.run_with_cache(tokens, names_filter=hook_names)
 
-        # With left-padding, position -1 is always the last real token
         for layer in layers:
             act = cache[resid_post_hook(layer)][:, -1, :].cpu()
             all_acts[layer].append(act)
