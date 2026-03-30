@@ -1,0 +1,48 @@
+{
+    "seed": 42,
+    "test_split": 0.2,
+    "models": {
+        "gpt2-xl":                                       { "layers": [8, 16, 24] },
+        "opt-2.7b":                                      { "layers": [10, 16, 21] },
+        "llama-2-13b":                                   { "layers": [15, 18, 21] },
+        "llama-3.2-1b":                                  { "layers": [4, 6, 8]   },
+        "llama-3.2-1b-instruct":                         { "layers": [4, 6, 8]   },
+        "llama-3.2-3b":                                  { "layers": [7, 10, 14]  },
+        "llama-3.2-3b-instruct":                         { "layers": [7, 10, 14]  },
+        "gemma-2-9b":                                    { "layers": [16, 18, 21] },
+        "gemma-2-9b-it":                                 { "layers": [16, 18, 21] },
+        "gemma-2-27b":                                   { "layers": [16, 20, 24] },
+        "gemma-2-27b-it":                                { "layers": [16, 20, 24] },
+        "gemma-3-1b-pt":                                 { "layers": [6, 9, 12]   },
+        "gemma-3-1b-it":                                 { "layers": [6, 9, 12]   },
+        "gemma-3-4b-pt":                                 { "layers": [9, 12, 15]  },
+        "gemma-3-4b-it":                                 { "layers": [9, 12, 15]  },
+        "llama-3.1-8b":                                 { "layers": [8, 12, 15, 18] },
+        "llama-3.1-8b-instruct":                        { "layers": [8, 12, 15, 18] },
+        "llama-3.1-8b-instruct-bad-medical-advice":     { "layers": [8, 12, 15, 18] },
+        "llama-3.1-8b-instruct-risky-financial-advice": { "layers": [8, 12, 15, 18] },
+        "llama-3.1-8b-instruct-extreme-sports":         { "layers": [8, 12, 15, 18] }
+    },
+    "train_groups": [
+        ["cities"],
+        ["cities", "neg_cities"],
+        ["larger_than"],
+        ["larger_than", "smaller_than"],
+        ["companies_true_false"],
+        ["common_claim_true_false"]
+    ],
+    "test_datasets": [
+        "cities",
+        "neg_cities",
+        "sp_en_trans",
+        "neg_sp_en_trans",
+        "larger_than",
+        "smaller_than",
+        "cities_cities_conj",
+        "cities_cities_disj",
+        "companies_true_false",
+        "common_claim_true_false",
+        "counterfact_true_false",
+        "likely"
+    ]
+}
