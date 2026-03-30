@@ -1,6 +1,9 @@
 # Environment secrets
 .env
 
+# Cluster-specific batch scripts (private)
+batch_scripts/
+
 # Original cloned reference repo and paper PDF
 geometry-of-truth/
 geometry_of_truth.pdf
