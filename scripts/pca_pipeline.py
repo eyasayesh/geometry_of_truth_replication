@@ -95,13 +95,15 @@ def sample_dataset(
     labels: list[int],
     max_rows: int | None,
     seed: int,
+    shuffle: bool = True,
 ) -> tuple[list[str], list[int]]:
     """Shuffle and subsample to max_rows if the dataset exceeds the limit."""
     if max_rows is None or len(statements) <= max_rows:
         return statements, labels
     rng = random.Random(seed)
     indices = list(range(len(statements)))
-    rng.shuffle(indices)
+    if shuffle:
+        rng.shuffle(indices)
     indices = indices[:max_rows]
     return [statements[i] for i in indices], [labels[i] for i in indices]
 
@@ -114,6 +116,8 @@ def extract_for_model(
     batch_size: int = 25,
     max_rows: int | None = None,
     seed: int = 42,
+    padding_side: str = "left",
+    shuffle: bool = True,
 ) -> None:
     """
     Load model, extract activations for all (dataset, layer) pairs that don't
@@ -148,11 +152,11 @@ def extract_for_model(
             print(f"    WARNING: {e} — skipping.")
             continue
 
-        statements, labels = sample_dataset(statements, labels, max_rows, seed)
+        statements, labels = sample_dataset(statements, labels, max_rows, seed, shuffle)
         n = len(statements)
         print(f"  Dataset: {dataset_name} ({n} rows) — extracting layers {layers_for_ds}")
 
-        acts = extract_acts(model=model, statements=statements, layers=layers_for_ds, batch_size=batch_size)
+        acts = extract_acts(model=model, statements=statements, layers=layers_for_ds, batch_size=batch_size, padding_side=padding_side)
         save_acts(acts, model_name, dataset_name, acts_dir, batch_size=batch_size)
 
         # Save labels so PCA uses the correct (possibly subsampled) subset
@@ -177,6 +181,8 @@ def run_pca_for_model(
     pca_dir: str,
     figures_dir: str,
     n_pcs: int = 10,
+    center: bool = True,
+    scale: bool = True,
 ) -> None:
     config = MODEL_REGISTRY[model_name]
 
@@ -201,7 +207,7 @@ def run_pca_for_model(
                 _, labels = load_dataset(dataset_name)
 
             k = min(n_pcs, acts.shape[1], acts.shape[0] - 1)
-            result = run_pca(acts, k=k)
+            result = run_pca(acts, k=k, center=center, scale=scale)
 
             ev = result.explained_var_ratio
             print(f"    {dataset_name} layer {layer}: PC1={ev[0]:.1%}, PC2={ev[1]:.1%}")
@@ -257,6 +263,24 @@ def parse_args():
         default=10,
         help="Number of PCs to compute and report (default: 10)",
     )
+    parser.add_argument(
+        "--right_padding",
+        action="store_true",
+        default=False,
+        help="Use right-padding during extraction (matches original paper behaviour)",
+    )
+    parser.add_argument(
+        "--no_center",
+        action="store_true",
+        default=False,
+        help="Disable mean-centering inside PCA (does not affect load_acts)",
+    )
+    parser.add_argument(
+        "--no_scale",
+        action="store_true",
+        default=False,
+        help="Disable per-dimension std scaling inside PCA",
+    )
     return parser.parse_args()
 
 
@@ -267,6 +291,8 @@ def main():
     print(f"Models:   {list(models.keys())}")
     print(f"Datasets: {datasets}")
     print(f"max_rows: {max_rows}  |  seed: {seed}")
+    print(f"padding:  {'right' if args.right_padding else 'left'}")
+    print(f"center:   {not args.no_center}  |  scale: {not args.no_scale}")
     print()
 
     for model_name, model_cfg in models.items():
@@ -278,7 +304,7 @@ def main():
 
         # Step 1: extract activations (GPU)
         try:
-            extract_for_model(model_name, datasets, layers, args.acts_dir, batch_size=batch_size, max_rows=max_rows, seed=seed)
+            extract_for_model(model_name, datasets, layers, args.acts_dir, batch_size=batch_size, max_rows=max_rows, seed=seed, padding_side="right" if args.right_padding else "left")
         except Exception as e:
             print(f"  ERROR during extraction: {type(e).__name__}: {e}")
             torch.cuda.empty_cache()
@@ -297,6 +323,8 @@ def main():
                 pca_dir=args.pca_dir,
                 figures_dir=args.figures_dir,
                 n_pcs=args.n_pcs,
+                center=not args.no_center,
+                scale=not args.no_scale,
             )
         except Exception as e:
             print(f"  ERROR during PCA: {type(e).__name__}: {e}")
