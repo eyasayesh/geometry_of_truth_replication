@@ -2,6 +2,7 @@
     "seed": 42,
     "test_split": 0.2,
     "models": {
+        "llama-3.1-8b":                                 { "layers": [8, 12, 15, 18] },
         "llama-3.1-8b-instruct":                        { "layers": [8, 12, 15, 18] },
         "llama-3.1-8b-instruct-bad-medical-advice":     { "layers": [8, 12, 15, 18] },
         "llama-3.1-8b-instruct-risky-financial-advice": { "layers": [8, 12, 15, 18] },
@@ -9,12 +10,15 @@
     },
     "train_groups": [
         ["cities"],
+        ["cities", "neg_cities"],
+        ["cities", "larger_than"],
         ["sp_en_trans"],
         ["larger_than"],
+        ["larger_than", "smaller_than"],
         ["smaller_than"],
         ["companies_true_false"],
         ["common_claim_true_false"],
-        ["cities", "sp_en_trans", "larger_than", "smaller_than"]
+        ["likely"]
     ],
     "test_datasets": [
         "cities",
