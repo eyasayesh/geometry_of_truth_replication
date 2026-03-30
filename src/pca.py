@@ -67,6 +67,48 @@ def run_pca(
     )
 
 
+def load_pca_results(path: str) -> PCAResult:
+    """
+    Load a PCAResult saved by the PCA pipeline.
+
+    Args:
+        path: path to a pca_layer{layer}.pt file
+
+    Returns:
+        PCAResult with components, projections, explained_var_ratio, mean, std
+    """
+    state = torch.load(path, weights_only=True)
+    return PCAResult(
+        projections=state["projections"],
+        components=state["components"],
+        explained_var_ratio=state["explained_var_ratio"],
+        mean=state.get("mean"),
+        std=state.get("std"),
+    )
+
+
+def project_onto_pca(acts: torch.Tensor, result: PCAResult) -> torch.Tensor:
+    """
+    Project activations into an existing PC space defined by a PCAResult.
+
+    Applies the same centering and scaling that were used when fitting the PCA
+    (stored in result.mean and result.std; skipped if None), then projects.
+
+    Args:
+        acts:   [n, hidden_size] float tensor
+        result: PCAResult whose components define the target space
+
+    Returns:
+        [n, k] projected activations
+    """
+    acts = acts.float()
+    if result.mean is not None:
+        acts = acts - result.mean
+    if result.std is not None:
+        acts = acts / result.std
+    return torch.mm(acts, result.components)
+
+
 def project_probe(
     direction: torch.Tensor,
     result: PCAResult,

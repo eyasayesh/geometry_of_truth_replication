@@ -219,6 +219,8 @@ def run_pca_for_model(
                 "components": result.components,
                 "projections": result.projections,
                 "explained_var_ratio": result.explained_var_ratio,
+                "mean": result.mean,
+                "std": result.std,
                 "model": model_name,
                 "dataset": dataset_name,
                 "layer": layer,
@@ -281,6 +283,12 @@ def parse_args():
         default=False,
         help="Disable per-dimension std scaling inside PCA",
     )
+    parser.add_argument(
+        "--pca_only",
+        action="store_true",
+        default=False,
+        help="Skip activation extraction (assumes activations already exist on disk). Allows running on CPU.",
+    )
     return parser.parse_args()
 
 
@@ -302,15 +310,16 @@ def main():
         print(f"Model: {MODEL_REGISTRY[model_name].display_name}  |  layers: {layers}  |  batch_size: {batch_size}")
         print(f"{'=' * 60}")
 
-        # Step 1: extract activations (GPU)
-        try:
-            extract_for_model(model_name, datasets, layers, args.acts_dir, batch_size=batch_size, max_rows=max_rows, seed=seed, padding_side="right" if args.right_padding else "left")
-        except Exception as e:
-            print(f"  ERROR during extraction: {type(e).__name__}: {e}")
-            torch.cuda.empty_cache()
-            gc.collect()
-            print()
-            continue
+        # Step 1: extract activations (GPU) — skipped when --pca_only
+        if not args.pca_only:
+            try:
+                extract_for_model(model_name, datasets, layers, args.acts_dir, batch_size=batch_size, max_rows=max_rows, seed=seed, padding_side="right" if args.right_padding else "left")
+            except Exception as e:
+                print(f"  ERROR during extraction: {type(e).__name__}: {e}")
+                torch.cuda.empty_cache()
+                gc.collect()
+                print()
+                continue
 
         # Step 2: PCA + figures (CPU)
         print(f"\n  Running PCA and generating figures...")
