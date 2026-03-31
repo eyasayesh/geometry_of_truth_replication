@@ -1,0 +1,22 @@
+{
+    "eval_dataset": "sp_en_trans",
+    "few_shot_examples": [
+        {"statement": "The Spanish word 'fruta' means 'goat'.", "label": 0},
+        {"statement": "The Spanish word 'carne' means 'meat'.", "label": 1}
+    ],
+    "batch_size": 25,
+    "seed": 42,
+    "models": {
+        "llama-3.1-8b-instruct": {
+            "layers": [8, 12, 15]
+        }
+    },
+    "train_groups": [
+        ["cities"],
+        ["cities", "neg_cities"],
+        ["larger_than"],
+        ["larger_than", "smaller_than"],
+        ["companies_true_false"],
+        ["common_claim_true_false"]
+    ]
+}

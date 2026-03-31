@@ -1,0 +1,49 @@
+{
+    "outer_grouping": "train_datasets",
+    "layers": [8, 12, 15],
+    "train_datasets": [
+        "cities",
+        "cities+neg_cities",
+        "larger_than",
+        "larger_than+smaller_than",
+        "companies_true_false",
+        "common_claim_true_false"
+    ],
+    "activation_datasets": [
+        "cities",
+        "neg_cities",
+        "sp_en_trans",
+        "neg_sp_en_trans",
+        "larger_than",
+        "smaller_than",
+        "cities_cities_conj",
+        "cities_cities_disj",
+        "companies_true_false",
+        "common_claim_true_false",
+        "counterfact_true_false"
+    ],
+    "figures": [
+        {
+            "activation_model": "llama-3.1-8b-instruct",
+            "probe_sources": [
+                {
+                    "probe_model": "llama-3.1-8b-instruct",
+                    "label": "instruct (in-domain)",
+                    "in_domain": true
+                },
+                {
+                    "probe_model": "llama-3.1-8b-instruct-bad-medical-advice",
+                    "label": "bad-medical → instruct"
+                },
+                {
+                    "probe_model": "llama-3.1-8b-instruct-risky-financial-advice",
+                    "label": "risky-financial → instruct"
+                },
+                {
+                    "probe_model": "llama-3.1-8b-instruct-extreme-sports",
+                    "label": "extreme-sports → instruct"
+                }
+            ]
+        }
+    ]
+}

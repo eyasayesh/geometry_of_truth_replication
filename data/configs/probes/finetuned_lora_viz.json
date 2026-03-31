@@ -11,10 +11,14 @@
     "train_groups": [
         ["cities"],
         ["cities", "neg_cities"],
+        ["cities", "larger_than"],
+        ["sp_en_trans"],
         ["larger_than"],
         ["larger_than", "smaller_than"],
+        ["smaller_than"],
         ["companies_true_false"],
-        ["common_claim_true_false"]
+        ["common_claim_true_false"],
+        ["likely"]
     ],
     "test_datasets": [
         "cities",
@@ -27,6 +31,7 @@
         "cities_cities_disj",
         "companies_true_false",
         "common_claim_true_false",
-        "counterfact_true_false"
+        "counterfact_true_false",
+        "likely"
     ]
 }
