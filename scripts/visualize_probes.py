@@ -78,6 +78,11 @@ def plot_probe_bar(df, train_key, test_datasets, model_name, layer):
             tickfont=dict(size=11),
         ),
         yaxis=dict(title="Accuracy", range=[0, 1], tickformat=".0%"),
+        shapes=[dict(
+            type="line", x0=0, x1=1, y0=0.5, y1=0.5,
+            xref="paper", yref="y",
+            line=dict(color="red", width=1.5, dash="dash"),
+        )],
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         template="plotly_white",
         height=450,
