@@ -12,17 +12,22 @@ Differences from our probe_pipeline.py:
   MMProbe  — full (non-pooled) covariance via pinv, iid=True applies correction
   CCSProbe — contrastive consistency probe, requires paired pos/neg datasets
 
-Example:
-    python scripts/original_probe_pipeline.py \\
-        --model_name llama-2-13b \\
-        --layers 12 16 20 \\
-        --train_groups cities sp_en_trans
+Config file format:
+  {
+      "seed": 42,
+      "test_split": 0.2,
+      "lr_epochs": 1000,
+      "lr_lr": 0.001,
+      "lr_wd": 0.1,
+      "models": {
+          "llama-2-13b": { "layers": [12, 16, 20] }
+      },
+      "train_groups": [["cities"], ["sp_en_trans"], ["cities", "sp_en_trans"]],
+      "test_datasets": ["cities", "neg_cities", ...]
+  }
 
-    python scripts/original_probe_pipeline.py \\
-        --model_name llama-2-13b \\
-        --layers 16 \\
-        --train_groups cities \\
-        --test_datasets cities neg_cities sp_en_trans
+Example:
+    python scripts/original_probe_pipeline.py --config data/configs/probes/original_probe_config.json
 """
 
 import argparse
@@ -232,31 +237,60 @@ def train_and_eval(
     return results
 
 
-# ── CLI ───────────────────────────────────────────────────────────────────────
+# ── Config / CLI ──────────────────────────────────────────────────────────────
+
+def load_config(path: str) -> dict:
+    with open(path) as f:
+        cfg = json.load(f)
+    for key in ("seed", "test_split", "lr_epochs", "lr_lr", "lr_wd", "models", "train_groups", "test_datasets"):
+        if key not in cfg:
+            raise ValueError(f"Config missing required key: '{key}'")
+    unknown_ds = [
+        ds
+        for group in cfg["train_groups"]
+        for ds in group
+        if ds not in ALL_DATASETS
+    ] + [ds for ds in cfg["test_datasets"] if ds not in ALL_DATASETS]
+    if unknown_ds:
+        raise ValueError(f"Unknown dataset(s) in config: {unknown_ds}")
+    return cfg
+
+
+def run_one(model_name, layer, train_groups, test_datasets, acts_dir, output_dir,
+            test_split, seed, lr_epochs, lr_lr, lr_wd):
+    print(f"{'=' * 60}")
+    print(f"Model: {model_name}  |  layer: {layer}")
+    print(f"{'=' * 60}")
+    print(f"Train groups:  {['+'.join(g) for g in train_groups]}")
+    print(f"Test datasets: {test_datasets}")
+    print()
+
+    results = train_and_eval(
+        model_name=model_name,
+        layer=layer,
+        train_groups=train_groups,
+        test_datasets=test_datasets,
+        acts_dir=acts_dir,
+        output_dir=output_dir,
+        test_split=test_split,
+        seed=seed,
+        lr_epochs=lr_epochs,
+        lr_lr=lr_lr,
+        lr_wd=lr_wd,
+    )
+
+    results_path = os.path.join(output_dir, model_name, f"layer_{layer}", "results.json")
+    os.makedirs(os.path.dirname(results_path), exist_ok=True)
+    with open(results_path, "w") as f:
+        json.dump(results, f, indent=4)
+    print(f"  Results saved to {results_path}\n")
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Probe pipeline using original geometry-of-truth probes"
     )
-    parser.add_argument(
-        "--model_name", required=True,
-        help="Short model name used for the acts directory (e.g. llama-2-13b-hf)",
-    )
-    parser.add_argument(
-        "--layers", nargs="+", type=int, required=True,
-        help="Layer indices to train probes at",
-    )
-    parser.add_argument(
-        "--train_groups", nargs="+", default=None,
-        help=(
-            "Training groups: each is a comma-separated list of datasets. "
-            "E.g. cities 'cities,sp_en_trans'. Default: each dataset individually."
-        ),
-    )
-    parser.add_argument(
-        "--test_datasets", nargs="+", default=None,
-        help="Datasets to evaluate on (default: all available)",
-    )
+    parser.add_argument("--config", required=True, help="JSON config file")
     parser.add_argument(
         "--acts_dir",
         default="/storage/home/hcoda1/7/eayesh3/scratch/geometry_of_truth/acts_original",
@@ -267,60 +301,24 @@ def parse_args():
         default="/storage/home/hcoda1/7/eayesh3/scratch/geometry_of_truth/probes_original",
         help="Root directory for probe files and results",
     )
-    parser.add_argument("--test_split", type=float, default=0.2)
-    parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--lr_epochs", type=int, default=1000)
-    parser.add_argument("--lr_lr", type=float, default=0.001)
-    parser.add_argument("--lr_wd", type=float, default=0.1)
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
+    cfg  = load_config(args.config)
 
-    # Resolve train groups
-    if args.train_groups:
-        train_groups = [tuple(g.split(",")) for g in args.train_groups]
-    else:
-        # Default: each dataset individually (only those with activations)
-        train_groups = [(ds,) for ds in ALL_DATASETS]
+    train_groups  = [tuple(g) for g in cfg["train_groups"]]
+    test_datasets = cfg["test_datasets"]
 
-    # Resolve test datasets
-    test_datasets = args.test_datasets or ALL_DATASETS
-
-    print(f"Model:         {args.model_name}")
-    print(f"Layers:        {args.layers}")
-    print(f"Train groups:  {['+'.join(g) for g in train_groups]}")
-    print(f"Test datasets: {test_datasets}")
-    print(f"acts_dir:      {args.acts_dir}")
-    print()
-
-    for layer in args.layers:
-        print(f"{'=' * 60}")
-        print(f"Layer: {layer}")
-        print(f"{'=' * 60}")
-
-        results = train_and_eval(
-            model_name=args.model_name,
-            layer=layer,
-            train_groups=train_groups,
-            test_datasets=test_datasets,
-            acts_dir=args.acts_dir,
-            output_dir=args.output_dir,
-            test_split=args.test_split,
-            seed=args.seed,
-            lr_epochs=args.lr_epochs,
-            lr_lr=args.lr_lr,
-            lr_wd=args.lr_wd,
-        )
-
-        results_path = os.path.join(
-            args.output_dir, args.model_name, f"layer_{layer}", "results.json"
-        )
-        os.makedirs(os.path.dirname(results_path), exist_ok=True)
-        with open(results_path, "w") as f:
-            json.dump(results, f, indent=4)
-        print(f"  Results saved to {results_path}\n")
+    for model_name, model_cfg in cfg["models"].items():
+        for layer in model_cfg["layers"]:
+            run_one(
+                model_name, layer, train_groups, test_datasets,
+                args.acts_dir, args.output_dir,
+                cfg["test_split"], cfg["seed"],
+                cfg["lr_epochs"], cfg["lr_lr"], cfg["lr_wd"],
+            )
 
     print("Pipeline complete.")
 
